@@ -1,0 +1,18 @@
+{
+  "name": "crypto-news-api",
+  "version": "1.0.0",
+  "description": "A Crypto news API",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Nnaemeka Daniel John",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.6.6",
+    "cheerio": "^1.0.0-rc.12",
+    "express": "^4.18.2",
+    "nodemon": "^3.0.3"
+  }
+}

@@ -1,11 +1,10 @@
-const axios = require('axios').default
-const cheerio = require('cheerio')
-const express = require('express')
+import express from "express";
+import { uTodayBitcoin } from "./lib/u.today.js";
+
 const PORT = 5000;
 
-const app = express();
-
-const articles = []
+const app = express()
+const allArticles = []
 
 const site = {
   bitcoin: [
@@ -25,27 +24,10 @@ const site = {
   ],
 
 }
-app.get('/', (req, res) => {
-  return res.json('Welcome to Crypto News API');
-});
 
-app.get('/news', (req, res) => {
-  axios.get('https://u.today/bitcoin-news')
-  .then((response) => {
-    const html = response.data;
-    const $ = cheerio.load(html);
-    console.log($('a').text())
-    $('a:contains("bitcoin")', html).each(() => {
-      const title = $(this).text;
-      const url = $(this).attr('href');
-      articles.push({
-        title,
-        url,
-      });
-    })
-    console.log(articles)
-    return res.json(articles)
-  })
+app.get('/', async (req, res) => {
+  allArticles.push({"u.today": await uTodayBitcoin()})
+  return res.json(allArticles)
 });
 
 app.listen(PORT, (err) => {

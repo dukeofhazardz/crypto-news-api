@@ -4,7 +4,6 @@ import { uTodayBitcoin } from "./lib/u.today.js";
 const PORT = 5000;
 
 const app = express()
-const allArticles = []
 
 const site = {
   bitcoin: [
@@ -26,6 +25,7 @@ const site = {
 }
 
 app.get('/', async (req, res) => {
+  const allArticles = []
   allArticles.push({"u.today": await uTodayBitcoin()})
   return res.json(allArticles)
 });

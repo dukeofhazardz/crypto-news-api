@@ -1,5 +1,6 @@
 import express from "express";
-import { uTodayBitcoin } from "./lib/u.today.js";
+import { uTodayBitcoin } from "../lib/u.today.js";
+import { newsBTC } from "../lib/newsbtc.js";
 
 const PORT = 5000;
 
@@ -27,6 +28,7 @@ const site = {
 app.get('/', async (req, res) => {
   const allArticles = []
   allArticles.push({"u.today": await uTodayBitcoin()})
+  allArticles.push({"newsBTC": await newsBTC()})
   return res.json(allArticles)
 });
 

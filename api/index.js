@@ -1,6 +1,7 @@
 import express from "express";
-import { uTodayBitcoin } from "../lib/u.today.js";
-import { newsBTC } from "../lib/newsbtc.js";
+import { uTodayBitcoin, uTodayCardano, uTodayEthereum } from "../lib/u.today.js";
+import { newsBTCBitcoin, newsBTCEthereum, newsBTCCardano } from "../lib/newsbtc.js";
+import { cryptoMufasaBitcoin, cryptoMufasaEthereum } from "../lib/mufasa.js";
 
 const PORT = 5000;
 
@@ -8,10 +9,6 @@ const app = express()
 
 const site = {
   bitcoin: [
-    'https://u.today/bitcoin-news',
-    'https://www.newsbtc.com/news/bitcoin/',
-    'https://www.reddit.com/r/Bitcoin/',
-    'https://cryptomufasa.com/category/bitcoin-news/',
     'https://digitalexchangexpress.com/category/crypto-currency/bitcoin/',
     'https://www.kryptomoney.com/tag/bitcoin-news/',
     'https://www.cryptoknowmics.com/news/bitcoin',
@@ -27,8 +24,17 @@ const site = {
 
 app.get('/', async (req, res) => {
   const allArticles = []
-  allArticles.push({"u.today": await uTodayBitcoin()})
-  allArticles.push({"newsBTC": await newsBTC()})
+  allArticles.push({ "u.today": {
+    bitcoin: await uTodayBitcoin(), 
+    ethereum: await uTodayEthereum(),
+    cardano: await uTodayCardano()
+  }});
+
+  allArticles.push({ "newsBTC": {
+    bitcoin: await newsBTCBitcoin(),
+    ethereum: await newsBTCEthereum(),
+    cardano: await newsBTCCardano()
+  }});
   return res.json(allArticles)
 });
 

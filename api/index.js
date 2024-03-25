@@ -1,46 +1,113 @@
 import express from "express";
-import { uTodayBitcoin, uTodayCardano, uTodayEthereum } from "../lib/u.today.js";
-import { newsBTCBitcoin, newsBTCEthereum, newsBTCCardano } from "../lib/newsbtc.js";
+import { redisClient } from "../utils/redis.js";
+import { uTodayBitcoin, uTodayCardano, uTodayEthereum, uTodayDogecoin, uTodayNFT } from "../lib/u.today.js";
+import { newsBTCBitcoin, newsBTCEthereum, newsBTCCardano, newsBTCDogecoin, newsBTCNFT } from "../lib/newsbtc.js";
 import { cryptoMufasaBitcoin, cryptoMufasaEthereum } from "../lib/mufasa.js";
+import { digitalBitcoin, digitalEthereum, digitalDogecoin } from "../lib/digitalex.js";
+import { cryptoKnowBitcoin } from "../lib/cryptoknowmics.js";
 
 const PORT = 5000;
-
 const app = express()
-
-const site = {
-  bitcoin: [
-    'https://digitalexchangexpress.com/category/crypto-currency/bitcoin/',
-    'https://www.kryptomoney.com/tag/bitcoin-news/',
-    'https://www.cryptoknowmics.com/news/bitcoin',
-  ],
-  etherium: [
-
-  ],
-  altcoin: [
-
-  ],
-
-}
 
 app.get('/', async (req, res) => {
   const allArticles = []
-  allArticles.push({ "u.today": {
-    bitcoin: await uTodayBitcoin(), 
-    ethereum: await uTodayEthereum(),
-    cardano: await uTodayCardano()
-  }});
+  allArticles.push({ "bitcoin": [
+    ...(await uTodayBitcoin()), 
+    ...(await newsBTCBitcoin()),
+    ...(await cryptoMufasaBitcoin()),
+    ...(await digitalBitcoin()),
+    ...(await cryptoKnowBitcoin())
+  ]});
 
-  allArticles.push({ "newsBTC": {
-    bitcoin: await newsBTCBitcoin(),
-    ethereum: await newsBTCEthereum(),
-    cardano: await newsBTCCardano()
-  }});
+  allArticles.push({ "ethereum": [
+    ...(await uTodayEthereum()),
+    ...(await newsBTCEthereum()),
+    ...(await cryptoMufasaEthereum()),
+    ...(await digitalEthereum()),
+  ]});
+
+  allArticles.push({ "cardano": [
+    ...(await uTodayCardano()),
+    ...(await newsBTCCardano())
+  ]});
+
+  allArticles.push({ "dogecoin": [
+    ...(await uTodayDogecoin()),
+    ...(await newsBTCDogecoin()),
+    ...(await digitalDogecoin())
+  ]});
+
+  allArticles.push({ "nft": [
+    ...(await uTodayNFT()),
+    ...(await newsBTCNFT())
+  ]});
+
   return res.json(allArticles)
 });
 
-app.listen(PORT, (err) => {
-  if (err) {
-    console.log(`Error listening on Port ${PORT}`);
-  }
-  console.log(`Server running on Port ${PORT}`);
-})
+app.get('/bitcoin', async (req, res) => {
+  const articles = []
+  articles.push({ "bitcoin": [
+    ...(await uTodayBitcoin()), 
+    ...(await newsBTCBitcoin()),
+    ...(await cryptoMufasaBitcoin()),
+    ...(await digitalBitcoin()),
+    ...(await cryptoKnowBitcoin())
+  ]});
+  
+  return res.json(articles)
+});
+
+app.get('/ethereum', async (req, res) => {
+  const articles = []
+  articles.push({ "ethereum": [
+    ...(await uTodayEthereum()),
+    ...(await newsBTCEthereum()),
+    ...(await cryptoMufasaEthereum()),
+    ...(await digitalEthereum()),
+  ]});
+
+  return res.json(articles)
+});
+
+app.get('/cardano', async (req, res) => {
+  const articles = []
+  articles.push({ "cardano": [
+    ...(await uTodayCardano()),
+    ...(await newsBTCCardano())
+  ]});
+
+  return res.json(articles)
+});
+
+app.get('/dogecoin', async (req, res) => {
+  const articles = []
+  articles.push({ "dogecoin": [
+    ...(await uTodayDogecoin()),
+    ...(await newsBTCDogecoin()),
+    ...(await digitalDogecoin())
+  ]});
+
+  return res.json(articles)
+});
+
+app.get('/nft', async (req, res) => {
+  const articles = []
+  articles.push({ "nft": [
+    ...(await uTodayNFT()),
+    ...(await newsBTCNFT())
+  ]});
+
+  return res.json(articles)
+});
+
+redisClient.redis.on("connect", () => {
+  console.log("Connected to Redis successfully.");
+
+  app.listen(PORT, (err) => {
+    if (err) {
+      console.log(`Error listening on Port ${PORT}`);
+    }
+    console.log(`Server running on Port ${PORT}`);
+  })  
+});

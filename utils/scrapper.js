@@ -7,6 +7,7 @@ const scrapper = async (url, element, titleElement) => {
 
   const data = await page.evaluate((allElementSelector, titleSelector) => {
     const articles = document.querySelectorAll(allElementSelector);
+    console.log('Selected articles:', articles);
 
     return Array.from(articles).map((article) => {
       const title = article.querySelector(titleSelector).textContent.trim();

@@ -5,7 +5,7 @@ import { Redis } from "ioredis";
 const username = process.env.REDIS_USERNAME;
 const password = process.env.REDIS_PASSWORD;
 
-const redisURI = ""
+const redisURI = `redis://${username}:${password}@redis-12819.c14.us-east-1-2.ec2.cloud.redislabs.com:12819`
 
 class RedisClient {
     constructor() {

@@ -47,56 +47,56 @@ app.get('/', async (req, res) => {
 
 app.get('/bitcoin', async (req, res) => {
   const articles = []
-  articles.push({ "bitcoin": [
+  articles.push(
     ...(await uTodayBitcoin()), 
     ...(await newsBTCBitcoin()),
     ...(await cryptoMufasaBitcoin()),
     ...(await digitalBitcoin()),
     ...(await cryptoKnowBitcoin())
-  ]});
+  );
   
   return res.json(articles)
 });
 
 app.get('/ethereum', async (req, res) => {
   const articles = []
-  articles.push({ "ethereum": [
+  articles.push(
     ...(await uTodayEthereum()),
     ...(await newsBTCEthereum()),
     ...(await cryptoMufasaEthereum()),
     ...(await digitalEthereum()),
-  ]});
+  );
 
   return res.json(articles)
 });
 
 app.get('/cardano', async (req, res) => {
   const articles = []
-  articles.push({ "cardano": [
+  articles.push(
     ...(await uTodayCardano()),
     ...(await newsBTCCardano())
-  ]});
+  );
 
   return res.json(articles)
 });
 
 app.get('/dogecoin', async (req, res) => {
   const articles = []
-  articles.push({ "dogecoin": [
+  articles.push(
     ...(await uTodayDogecoin()),
     ...(await newsBTCDogecoin()),
     ...(await digitalDogecoin())
-  ]});
+  );
 
   return res.json(articles)
 });
 
 app.get('/nft', async (req, res) => {
   const articles = []
-  articles.push({ "nft": [
+  articles.push(
     ...(await uTodayNFT()),
     ...(await newsBTCNFT())
-  ]});
+  );
 
   return res.json(articles)
 });

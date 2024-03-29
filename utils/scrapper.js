@@ -3,6 +3,7 @@ import Chromium from "@sparticuz/chromium";
 
 
 const scrapper = async (url, element, titleElement) => {
+  Chromium.setGraphicsMode = false;
   const browser = await puppeteer.launch({
     args: Chromium.args,
       defaultViewport: Chromium.defaultViewport,

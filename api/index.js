@@ -10,10 +10,6 @@ const PORT = 5000;
 const app = express()
 
 app.get('/', async (req, res) => {
-  return res.json({"message": "Welcome to Crypto News API"});
-});
-
-app.get('/news', async (req, res) => {
   const allArticles = []
   allArticles.push({ "bitcoin": [
     ...(await uTodayBitcoin()), 

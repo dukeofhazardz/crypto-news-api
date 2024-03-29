@@ -1,43 +1,31 @@
-import puppeteer from "puppeteer-core";
-import Chromium from "@sparticuz/chromium";
+import axios from "axios"; // for making HTTP requests
+import cheerio from "cheerio";
 
 const scrapper = async (url, element, titleElement) => {
-  // Launch browser
-  const browser = await puppeteer.launch({
-    args: Chromium.args,
-    defaultViewport: Chromium.defaultViewport,
-    executablePath: await Chromium.executablePath(),
-    headless: Chromium.headless,
-    ignoreHTTPSErrors: true,
-  });
-
   try {
-    // Create a new page
-    const page = await browser.newPage();
-    await page.goto(url, { waitUntil: 'domcontentloaded' });
+    // Fetch the HTML content from the URL
+    const response = await axios.get(url);
+    const html = response.data;
 
-    // Execute in the browser context
-    const data = await page.evaluate((allElementSelector, titleSelector) => {
-      const articles = document.querySelectorAll(allElementSelector);
-      const results = [];
+    // Load the HTML content into Cheerio
+    const $ = cheerio.load(html);
 
-      articles.forEach((article) => {
-        const title = article.querySelector(titleSelector)?.textContent?.trim();
-        const link = article.querySelector('a')?.href;
-        if (title && link) {
-          results.push({ title, link });
-        }
-      });
+    // Select elements using Cheerio selectors and extract data
+    const articles = $(element);
+    const results = [];
 
-      return results;
-    }, element, titleElement);
+    articles.each((index, article) => {
+      const title = $(article).find(titleElement).text().trim();
+      const link = $(article).find('a').attr('href');
+      if (title && link) {
+        results.push({ title, link });
+      }
+    });
 
-    return data;
-  } finally {
-    // Close the page and browser
-    if (browser) {
-      await browser.close();
-    }
+    return results;
+  } catch (error) {
+    console.error("Error:", error);
+    return [];
   }
 };
 

@@ -1,7 +1,17 @@
 import puppeteer from "puppeteer";
+import Chromium from "@sparticuz/chromium-min";
+
 
 const scrapper = async (url, element, titleElement) => {
-  const browser = await puppeteer.launch();
+  const browser = await puppeteer.launch({
+    args: [...Chromium.args, '--hide-scrollbars', '--disable-web-security'],
+    defaultViewport: Chromium.defaultViewport,
+    executablePath: await Chromium.executablePath(
+      `https://github.com/Sparticuz/chromium/releases/download/v116.0.0/chromium-v116.0.0-pack.tar`
+    ),
+    headless: Chromium.headless,
+    ignoreHTTPSErrors: true,
+  });
   const page = await browser.newPage();
   await page.goto(url, { waitUntil: 'domcontentloaded' });
 
